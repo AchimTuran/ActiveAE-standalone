@@ -29,7 +29,7 @@
 #include "cores/AudioEngine/AEFactory.h"
 #include "cores/AudioEngine/Engines/ActiveAE/ActiveAEBuffer.h"
 
-#include "guilib/DispResource.h"
+//#include "guilib/DispResource.h"
 #include <queue>
 
 // ffmpeg

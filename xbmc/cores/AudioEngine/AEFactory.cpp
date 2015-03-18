@@ -24,10 +24,10 @@
 
 #include "Engines/ActiveAE/ActiveAE.h"
 
-#include "guilib/LocalizeStrings.h"
-#include "settings/lib/Setting.h"
-#include "settings/Settings.h"
-#include "utils/StringUtils.h"
+//#include "guilib/LocalizeStrings.h"
+//#include "settings/lib/Setting.h"
+//#include "settings/Settings.h"
+//#include "utils/StringUtils.h"
 
 IAE* CAEFactory::AE = NULL;
 static float  g_fVolume = 1.0f;
@@ -320,16 +320,17 @@ void CAEFactory::SettingOptionsAudioQualityLevelsFiller(const CSetting *setting,
   if (!AE)
     return;
 
-  if(AE->SupportsQualityLevel(AE_QUALITY_LOW))
-    list.push_back(std::make_pair(g_localizeStrings.Get(13506), AE_QUALITY_LOW));
-  if(AE->SupportsQualityLevel(AE_QUALITY_MID))
-    list.push_back(std::make_pair(g_localizeStrings.Get(13507), AE_QUALITY_MID));
-  if(AE->SupportsQualityLevel(AE_QUALITY_HIGH))
-    list.push_back(std::make_pair(g_localizeStrings.Get(13508), AE_QUALITY_HIGH));
-  if(AE->SupportsQualityLevel(AE_QUALITY_REALLYHIGH))
-    list.push_back(std::make_pair(g_localizeStrings.Get(13509), AE_QUALITY_REALLYHIGH));
-  if(AE->SupportsQualityLevel(AE_QUALITY_GPU))
-    list.push_back(std::make_pair(g_localizeStrings.Get(38010), AE_QUALITY_GPU));
+// ToDo: generate supporting strings
+//  if(AE->SupportsQualityLevel(AE_QUALITY_LOW))
+//    list.push_back(std::make_pair(g_localizeStrings.Get(13506), AE_QUALITY_LOW));
+//  if(AE->SupportsQualityLevel(AE_QUALITY_MID))
+//    list.push_back(std::make_pair(g_localizeStrings.Get(13507), AE_QUALITY_MID));
+//  if(AE->SupportsQualityLevel(AE_QUALITY_HIGH))
+//    list.push_back(std::make_pair(g_localizeStrings.Get(13508), AE_QUALITY_HIGH));
+//  if(AE->SupportsQualityLevel(AE_QUALITY_REALLYHIGH))
+//    list.push_back(std::make_pair(g_localizeStrings.Get(13509), AE_QUALITY_REALLYHIGH));
+//  if(AE->SupportsQualityLevel(AE_QUALITY_GPU))
+//    list.push_back(std::make_pair(g_localizeStrings.Get(38010), AE_QUALITY_GPU));
 }
 
 void CAEFactory::SettingOptionsAudioStreamsilenceFiller(const CSetting *setting, std::vector< std::pair<std::string, int> > &list, int &current, void *data)
@@ -337,16 +338,18 @@ void CAEFactory::SettingOptionsAudioStreamsilenceFiller(const CSetting *setting,
   if (!AE)
     return;
 
-  list.push_back(std::make_pair(g_localizeStrings.Get(20422), XbmcThreads::EndTime::InfiniteValue));
-  list.push_back(std::make_pair(g_localizeStrings.Get(13551), 0));
+// ToDo:
+//  list.push_back(std::make_pair(g_localizeStrings.Get(20422), XbmcThreads::EndTime::InfiniteValue));
+//  list.push_back(std::make_pair(g_localizeStrings.Get(13551), 0));
 
   if (AE->SupportsSilenceTimeout())
   {
-    list.push_back(std::make_pair(StringUtils::Format(g_localizeStrings.Get(13554).c_str(), 1), 1));
-    for (int i = 2; i <= 10; i++)
-    {
-      list.push_back(std::make_pair(StringUtils::Format(g_localizeStrings.Get(13555).c_str(), i), i));
-    }
+// ToDo:
+//    list.push_back(std::make_pair(StringUtils::Format(g_localizeStrings.Get(13554).c_str(), 1), 1));
+//    for (int i = 2; i <= 10; i++)
+//    {
+//      list.push_back(std::make_pair(StringUtils::Format(g_localizeStrings.Get(13555).c_str(), i), i));
+//    }
   }
 }
 
