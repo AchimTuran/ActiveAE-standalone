@@ -9,8 +9,14 @@
 #include <iostream>
 using namespace std;
 
+#include "cores/AudioEngine/AEFactory.h"
+
 int main()
 {
-  cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+  if(!CAEFactory::LoadEngine())
+  {
+    cout << "Error: Can't load ActiveAE!" << endl;
+  }
+
   return 0;
 }
