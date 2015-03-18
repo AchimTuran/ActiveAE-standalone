@@ -24,22 +24,31 @@
 //  Purpose:   ATL split string utility
 //  Author:    Paul J. Weiss
 //
-//  Modified to use J O'Leary's CStdString class by kraqh3d
+//  Modified to use J O'Leary's std::string class by kraqh3d
 //
 //------------------------------------------------------------------------
 
 
 #include "StringUtils.h"
-#include "utils/RegExp.h"
-#include "utils/fstrcmp.h"
-#include "Util.h"
-#include "LangInfo.h"
+// ToDo: for what is this used?
+//#include "utils/fstrcmp.h"
+// ToDO: for what is this used?
+//#include "Util.h"
+//#include "LangInfo.h"
 #include <locale>
+#include <functional>
 
+#include <assert.h>
 #include <math.h>
 #include <sstream>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <memory.h>
+#include <algorithm>
+// ToDo: Is this really necassary for ActiveAE?
+//#include "utils/RegExp.h" // don't move or std functions end up in PCRE namespace
 
 #define FORMAT_BLOCK_SIZE 512 // # of bytes for initial allocation for printf
 
@@ -48,9 +57,8 @@ using namespace std;
 const char* ADDON_GUID_RE = "^(\\{){0,1}[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}(\\}){0,1}$";
 
 /* empty string for use in returns by ref */
-const CStdString StringUtils::EmptyString = "";
 const std::string StringUtils::Empty = "";
-CStdString StringUtils::m_lastUUID = "";
+std::string StringUtils::m_lastUUID = "";
 
 //	Copyright (c) Leigh Brasington 2012.  All rights reserved.
 //  This code may be used and reproduced without written permission.
@@ -351,7 +359,7 @@ wchar_t toupperUnicode(const wchar_t& c)
 
 void StringUtils::ToUpper(string &str)
 {
-  transform(str.begin(), str.end(), str.begin(), ::toupper);
+  std::transform(str.begin(), str.end(), str.begin(), ::toupper);
 }
 
 void StringUtils::ToUpper(wstring &str)
@@ -424,7 +432,7 @@ string StringUtils::Mid(const string &str, size_t first, size_t count /* = strin
   if (first > str.size())
     return string();
   
-  ASSERT(first + count <= str.size());
+  assert(first + count <= str.size());
   
   return str.substr(first, count);
 }
@@ -652,7 +660,7 @@ bool StringUtils::EndsWithNoCase(const std::string &str1, const char *s2)
 std::string StringUtils::Join(const vector<string> &strings, const std::string& delimiter)
 {
   std::string result;
-  for(vector<string>::const_iterator it = strings.begin(); it != strings.end(); it++ )
+  for(vector<string>::const_iterator it = strings.begin(); it != strings.end(); ++it )
     result += (*it) + delimiter;
   
   if (!result.empty())
@@ -714,7 +722,7 @@ std::vector<std::string> StringUtils::Split(const std::string& input, const char
 
 
 // returns the number of occurrences of strFind in strInput.
-int StringUtils::FindNumber(const CStdString& strInput, const CStdString &strFind)
+int StringUtils::FindNumber(const std::string& strInput, const std::string &strFind)
 {
   size_t pos = strInput.find(strFind, 0);
   int numfound = 0;
@@ -729,70 +737,71 @@ int StringUtils::FindNumber(const CStdString& strInput, const CStdString &strFin
 // Compares separately the numeric and alphabetic parts of a string.
 // returns negative if left < right, positive if left > right
 // and 0 if they are identical (essentially calculates left - right)
+// ToDo: What does this function?
 int64_t StringUtils::AlphaNumericCompare(const wchar_t *left, const wchar_t *right)
 {
-  wchar_t *l = (wchar_t *)left;
-  wchar_t *r = (wchar_t *)right;
-  wchar_t *ld, *rd;
-  wchar_t lc, rc;
-  int64_t lnum, rnum;
-  const collate<wchar_t>& coll = use_facet< collate<wchar_t> >( g_langInfo.GetLocale() );
-  int cmp_res = 0;
-  while (*l != 0 && *r != 0)
-  {
-    // check if we have a numerical value
-    if (*l >= L'0' && *l <= L'9' && *r >= L'0' && *r <= L'9')
-    {
-      ld = l;
-      lnum = 0;
-      while (*ld >= L'0' && *ld <= L'9' && ld < l + 15)
-      { // compare only up to 15 digits
-        lnum *= 10;
-        lnum += *ld++ - '0';
-      }
-      rd = r;
-      rnum = 0;
-      while (*rd >= L'0' && *rd <= L'9' && rd < r + 15)
-      { // compare only up to 15 digits
-        rnum *= 10;
-        rnum += *rd++ - L'0';
-      }
-      // do we have numbers?
-      if (lnum != rnum)
-      { // yes - and they're different!
-        return lnum - rnum;
-      }
-      l = ld;
-      r = rd;
-      continue;
-    }
-    // do case less comparison
-    lc = *l;
-    if (lc >= L'A' && lc <= L'Z')
-      lc += L'a'-L'A';
-    rc = *r;
-    if (rc >= L'A' && rc <= L'Z')
-      rc += L'a'- L'A';
-
-    // ok, do a normal comparison, taking current locale into account. Add special case stuff (eg '(' characters)) in here later
-    if ((cmp_res = coll.compare(&lc, &lc + 1, &rc, &rc + 1)) != 0)
-    {
-      return cmp_res;
-    }
-    l++; r++;
-  }
-  if (*r)
-  { // r is longer
-    return -1;
-  }
-  else if (*l)
-  { // l is longer
-    return 1;
-  }
+//  wchar_t *l = (wchar_t *)left;
+//  wchar_t *r = (wchar_t *)right;
+//  wchar_t *ld, *rd;
+//  wchar_t lc, rc;
+//  int64_t lnum, rnum;
+//  const collate<wchar_t>& coll = use_facet< collate<wchar_t> >( g_langInfo.GetLocale() );
+//  int cmp_res = 0;
+//  while (*l != 0 && *r != 0)
+//  {
+//    // check if we have a numerical value
+//    if (*l >= L'0' && *l <= L'9' && *r >= L'0' && *r <= L'9')
+//    {
+//      ld = l;
+//      lnum = 0;
+//      while (*ld >= L'0' && *ld <= L'9' && ld < l + 15)
+//      { // compare only up to 15 digits
+//        lnum *= 10;
+//        lnum += *ld++ - '0';
+//      }
+//      rd = r;
+//      rnum = 0;
+//      while (*rd >= L'0' && *rd <= L'9' && rd < r + 15)
+//      { // compare only up to 15 digits
+//        rnum *= 10;
+//        rnum += *rd++ - L'0';
+//      }
+//      // do we have numbers?
+//      if (lnum != rnum)
+//      { // yes - and they're different!
+//        return lnum - rnum;
+//      }
+//      l = ld;
+//      r = rd;
+//      continue;
+//    }
+//    // do case less comparison
+//    lc = *l;
+//    if (lc >= L'A' && lc <= L'Z')
+//      lc += L'a'-L'A';
+//    rc = *r;
+//    if (rc >= L'A' && rc <= L'Z')
+//      rc += L'a'- L'A';
+//
+//    // ok, do a normal comparison, taking current locale into account. Add special case stuff (eg '(' characters)) in here later
+//    if ((cmp_res = coll.compare(&lc, &lc + 1, &rc, &rc + 1)) != 0)
+//    {
+//      return cmp_res;
+//    }
+//    l++; r++;
+//  }
+//  if (*r)
+//  { // r is longer
+//    return -1;
+//  }
+//  else if (*l)
+//  { // l is longer
+//    return 1;
+//  }
   return 0; // files are the same
 }
 
-int StringUtils::DateStringToYYYYMMDD(const CStdString &dateString)
+int StringUtils::DateStringToYYYYMMDD(const std::string &dateString)
 {
   vector<string> days = StringUtils::Split(dateString, '-');
   if (days.size() == 1)
@@ -805,9 +814,9 @@ int StringUtils::DateStringToYYYYMMDD(const CStdString &dateString)
     return -1;
 }
 
-long StringUtils::TimeStringToSeconds(const CStdString &timeString)
+long StringUtils::TimeStringToSeconds(const std::string &timeString)
 {
-  CStdString strCopy(timeString);
+  std::string strCopy(timeString);
   StringUtils::Trim(strCopy);
   if(StringUtils::EndsWithNoCase(strCopy, " min"))
   {
@@ -827,28 +836,30 @@ long StringUtils::TimeStringToSeconds(const CStdString &timeString)
   }
 }
 
-CStdString StringUtils::SecondsToTimeString(long lSeconds, TIME_FORMAT format)
+std::string StringUtils::SecondsToTimeString(long lSeconds, TIME_FORMAT format)
 {
   int hh = lSeconds / 3600;
   lSeconds = lSeconds % 3600;
   int mm = lSeconds / 60;
   int ss = lSeconds % 60;
 
-  if (format == TIME_FORMAT_GUESS)
-    format = (hh >= 1) ? TIME_FORMAT_HH_MM_SS : TIME_FORMAT_MM_SS;
-  CStdString strHMS;
-  if (format & TIME_FORMAT_HH)
-    strHMS += StringUtils::Format("%02.2i", hh);
-  else if (format & TIME_FORMAT_H)
-    strHMS += StringUtils::Format("%i", hh);
-  if (format & TIME_FORMAT_MM)
-    strHMS += StringUtils::Format(strHMS.empty() ? "%02.2i" : ":%02.2i", mm);
-  if (format & TIME_FORMAT_SS)
-    strHMS += StringUtils::Format(strHMS.empty() ? "%02.2i" : ":%02.2i", ss);
-  return strHMS;
+  // ToDo: Implement this formats
+//  if (format == TIME_FORMAT_GUESS)
+//    format = (hh >= 1) ? TIME_FORMAT_HH_MM_SS : TIME_FORMAT_MM_SS;
+//  std::string strHMS;
+//  if (format & TIME_FORMAT_HH)
+//    strHMS += StringUtils::Format("%02.2i", hh);
+//  else if (format & TIME_FORMAT_H)
+//    strHMS += StringUtils::Format("%i", hh);
+//  if (format & TIME_FORMAT_MM)
+//    strHMS += StringUtils::Format(strHMS.empty() ? "%02.2i" : ":%02.2i", mm);
+//  if (format & TIME_FORMAT_SS)
+//    strHMS += StringUtils::Format(strHMS.empty() ? "%02.2i" : ":%02.2i", ss);
+//  return strHMS;
+  return "";
 }
 
-bool StringUtils::IsNaturalNumber(const CStdString& str)
+bool StringUtils::IsNaturalNumber(const std::string& str)
 {
   size_t i = 0, n = 0;
   // allow whitespace,digits,whitespace
@@ -863,7 +874,7 @@ bool StringUtils::IsNaturalNumber(const CStdString& str)
   return i == str.size() && n > 0;
 }
 
-bool StringUtils::IsInteger(const CStdString& str)
+bool StringUtils::IsInteger(const std::string& str)
 {
   size_t i = 0, n = 0;
   // allow whitespace,-,digits,whitespace
@@ -907,9 +918,9 @@ void StringUtils::RemoveCRLF(std::string& strLine)
   StringUtils::TrimRight(strLine, "\n\r");
 }
 
-CStdString StringUtils::SizeToString(int64_t size)
+std::string StringUtils::SizeToString(int64_t size)
 {
-  CStdString strLabel;
+  std::string strLabel;
   const char prefixes[] = {' ','k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'};
   unsigned int i = 0;
   double s = (double)size;
@@ -1000,11 +1011,11 @@ size_t StringUtils::FindWords(const char *str, const char *wordLowerCase)
     // and repeat until we're done
   } while (*s);
 
-  return CStdString::npos;
+  return std::string::npos;
 }
 
 // assumes it is called from after the first open bracket is found
-int StringUtils::FindEndBracket(const CStdString &str, char opener, char closer, int startPos)
+int StringUtils::FindEndBracket(const std::string &str, char opener, char closer, int startPos)
 {
   int blocks = 1;
   for (unsigned int i = startPos; i < str.size(); i++)
@@ -1019,7 +1030,7 @@ int StringUtils::FindEndBracket(const CStdString &str, char opener, char closer,
     }
   }
 
-  return (int)CStdString::npos;
+  return (int)std::string::npos;
 }
 
 void StringUtils::WordToDigits(std::string &word)
@@ -1040,7 +1051,7 @@ void StringUtils::WordToDigits(std::string &word)
   }
 }
 
-CStdString StringUtils::CreateUUID()
+std::string StringUtils::CreateUUID()
 {
   /* This function generate a DCE 1.1, ISO/IEC 11578:1996 and IETF RFC-4122
   * Version 4 conform local unique UUID based upon random number generation.
@@ -1087,19 +1098,23 @@ CStdString StringUtils::CreateUUID()
   return UuidStrTmp;
 }
 
-bool StringUtils::ValidateUUID(const CStdString &uuid)
+bool StringUtils::ValidateUUID(const std::string &uuid)
 {
-  CRegExp guidRE;
-  guidRE.RegComp(ADDON_GUID_RE);
-  return (guidRE.RegFind(uuid.c_str()) == 0);
+// ToDo: if needed implement regular expressions
+//  CRegExp guidRE;
+//  guidRE.RegComp(ADDON_GUID_RE);
+//  return (guidRE.RegFind(uuid.c_str()) == 0);
+  return true;
 }
 
-double StringUtils::CompareFuzzy(const CStdString &left, const CStdString &right)
+double StringUtils::CompareFuzzy(const std::string &left, const std::string &right)
 {
-  return (0.5 + fstrcmp(left.c_str(), right.c_str(), 0.0) * (left.length() + right.length())) / 2.0;
+  // ToDo: check if this is needed!
+  //return (0.5 + fstrcmp(left.c_str(), right.c_str(), 0.0) * (left.length() + right.length())) / 2.0;
+  return 0.0;
 }
 
-int StringUtils::FindBestMatch(const CStdString &str, const vector<string> &strings, double &matchscore)
+int StringUtils::FindBestMatch(const std::string &str, const vector<string> &strings, double &matchscore)
 {
   int best = -1;
   matchscore = 0;
@@ -1118,7 +1133,7 @@ int StringUtils::FindBestMatch(const CStdString &str, const vector<string> &stri
   return best;
 }
 
-bool StringUtils::ContainsKeyword(const CStdString &str, const vector<string> &keywords)
+bool StringUtils::ContainsKeyword(const std::string &str, const vector<string> &keywords)
 {
   for (vector<string>::const_iterator it = keywords.begin(); it != keywords.end(); ++it)
   {
