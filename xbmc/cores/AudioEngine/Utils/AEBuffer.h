@@ -21,6 +21,7 @@
 
 #include "system.h"
 #include <assert.h>
+#include <memory.h>
 
 /**
  * This class wraps a block of 16 byte aligned memory for simple buffer
