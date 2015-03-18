@@ -8,6 +8,18 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include xbmc/utils/posix/subdir.mk
+-include xbmc/utils/subdir.mk
+-include xbmc/threads/platform/pthreads/subdir.mk
+-include xbmc/threads/platform/linux/subdir.mk
+-include xbmc/threads/platform/subdir.mk
+-include xbmc/threads/subdir.mk
+-include xbmc/cores/AudioEngine/Utils/subdir.mk
+-include xbmc/cores/AudioEngine/Sinks/subdir.mk
+-include xbmc/cores/AudioEngine/Engines/ActiveAE/subdir.mk
+-include xbmc/cores/AudioEngine/Encoders/subdir.mk
+-include xbmc/cores/AudioEngine/subdir.mk
+-include xbmc/commons/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -43,7 +55,7 @@ all: ActiveAE-standalone
 ActiveAE-standalone: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++  -o "ActiveAE-standalone" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -Wl,-soname=-Wl,--no-as-needed -o "ActiveAE-standalone" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

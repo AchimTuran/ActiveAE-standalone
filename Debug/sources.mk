@@ -23,5 +23,17 @@ C_UPPER_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+xbmc/utils/posix \
+xbmc/utils \
+xbmc/threads/platform/pthreads \
+xbmc/threads/platform/linux \
+xbmc/threads/platform \
+xbmc/threads \
+xbmc/cores/AudioEngine/Utils \
+xbmc/cores/AudioEngine/Sinks \
+xbmc/cores/AudioEngine/Engines/ActiveAE \
+xbmc/cores/AudioEngine/Encoders \
+xbmc/cores/AudioEngine \
+xbmc/commons \
 . \
 
