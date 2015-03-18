@@ -229,7 +229,8 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <errno.h>
-#include "PlatformInclude.h"
+// ToDo: for what is this used?
+//#include "PlatformInclude.h"
 #endif
 
 #if defined(TARGET_ANDROID)
