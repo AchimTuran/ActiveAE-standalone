@@ -36,7 +36,9 @@
 #endif
 #endif
 
+#include "threads/Thread.h"
 #include <signal.h>
+#include "utils/log.h"
 
 void CThread::SpawnThread(unsigned stacksize)
 {

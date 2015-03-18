@@ -18,6 +18,8 @@
  *
  */
 
+#include "threads/Thread.h"
+
 int CThread::GetSchedRRPriority(void)
 {
   return GetNormalPriority();
