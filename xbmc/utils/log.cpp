@@ -23,7 +23,9 @@
 #include "threads/SingleLock.h"
 #include "threads/Thread.h"
 #include "utils/StringUtils.h"
-#include "CompileInfo.h"
+#include "GlobalsHandling.h"
+// ToDo: remove compile infos from logger
+//#include "CompileInfo.h"
 
 static const char* const levelNames[] =
 {"DEBUG", "INFO", "NOTICE", "WARNING", "ERROR", "SEVERE", "FATAL", "NONE"};
@@ -110,9 +112,9 @@ bool CLog::Init(const std::string& path)
   // the log folder location is initialized in the CAdvancedSettings
   // constructor and changed in CApplication::Create()
 
-  std::string appName = CCompileInfo::GetAppName();
-  StringUtils::ToLower(appName);
-  return s_globals.m_platform.OpenLogFile(path + appName + ".log", path + appName + ".old.log");
+  //std::string appName = CCompileInfo::GetAppName();
+  //StringUtils::ToLower(appName);
+  return s_globals.m_platform.OpenLogFile(path /*+ appName*/ + ".log", path /*+ appName*/ + ".old.log");
 }
 
 void CLog::MemDump(char *pData, int length)
@@ -198,7 +200,8 @@ void CLog::PrintDebugString(const std::string& line)
 
 bool CLog::WriteLogString(int logLevel, const std::string& logString)
 {
-  static const char* prefixFormat = "%02.2d:%02.2d:%02.2d T:%" PRIu64" %7s: ";
+  // ToDo: what is PRIu64
+  static const char* prefixFormat = "";//"%02.2d:%02.2d:%02.2d T:%" PRIu64" %7s: ";
 
   std::string strData(logString);
   /* fixup newline alignment, number of spaces should equal prefix length */

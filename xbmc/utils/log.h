@@ -32,7 +32,8 @@ typedef class CWin32InterfaceForCLog PlatformInterfaceForCLog;
 
 #include "commons/ilog.h"
 #include "threads/CriticalSection.h"
-#include "utils/GlobalsHandling.h"
+// ToDo: for what is this used?
+//#include "utils/GlobalsHandling.h"
 
 #include "utils/params_check_macros.h"
 
@@ -83,4 +84,5 @@ namespace XbmcUtils
   };
 }
 
-XBMC_GLOBAL_REF(CLog, g_log);
+// ToDo: is this really needed?
+//XBMC_GLOBAL_REF(CLog, g_log);
