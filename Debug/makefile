@@ -14,12 +14,14 @@ RM := rm -rf
 -include xbmc/threads/platform/linux/subdir.mk
 -include xbmc/threads/platform/subdir.mk
 -include xbmc/threads/subdir.mk
+-include xbmc/linux/subdir.mk
 -include xbmc/cores/AudioEngine/Utils/subdir.mk
 -include xbmc/cores/AudioEngine/Sinks/subdir.mk
 -include xbmc/cores/AudioEngine/Engines/ActiveAE/subdir.mk
 -include xbmc/cores/AudioEngine/Encoders/subdir.mk
 -include xbmc/cores/AudioEngine/subdir.mk
 -include xbmc/commons/subdir.mk
+-include xbmc/subdir.mk
 -include subdir.mk
 -include objects.mk
 

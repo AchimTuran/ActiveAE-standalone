@@ -29,11 +29,13 @@ xbmc/threads/platform/pthreads \
 xbmc/threads/platform/linux \
 xbmc/threads/platform \
 xbmc/threads \
+xbmc/linux \
 xbmc/cores/AudioEngine/Utils \
 xbmc/cores/AudioEngine/Sinks \
 xbmc/cores/AudioEngine/Engines/ActiveAE \
 xbmc/cores/AudioEngine/Encoders \
 xbmc/cores/AudioEngine \
 xbmc/commons \
+xbmc \
 . \
 
